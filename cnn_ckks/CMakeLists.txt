@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 project(cnn_ckks_project)
 set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_BUILD_TYPE Debug)
 
 option(COMP "Build comparison operation" OFF)
 option(BOOT "Build comparison operation" OFF)
-option(CNN "Build comparison operation" OFF)
+option(CNN "Build comparison operation" ON)
 option(TEST "Build comparison operation" OFF)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./run)
 find_package(SEAL 3.6 REQUIRED)
