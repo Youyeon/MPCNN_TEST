@@ -121,6 +121,29 @@ void siso_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_o
 	output << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
 }
+void repacked_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, ofstream &output, Decryptor &decryptor, SEALContext &context, size_t stage, bool end)
+{
+    cout << "repacked convolution..." << endl;
+    output << "repacked convolution..." << endl;
+	int logn = cnn_in.logn();
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
+	time_start = chrono::high_resolution_clock::now();
+	repacked_convolution_seal(cnn_in, cnn_out, co, st, fh, fw, data, encoder, encryptor, evaluator, gal_keys, cipher_pool, end);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	// cout << "convolution " << stage << " result" << endl;
+	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	// output << "convolution " << stage << " result" << endl;
+    // decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
+	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
+	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
+	output << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
+	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
+}
 void multiplexed_parallel_convolution_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, vector<double> running_var, vector<double> constant_weight, double epsilon, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, ofstream &output, Decryptor &decryptor, SEALContext &context, size_t stage, bool end)
 {
     cout << "multiplexed parallel convolution..." << endl;
@@ -138,7 +161,7 @@ void multiplexed_parallel_convolution_print(const TensorCipher &cnn_in, TensorCi
 	// cout << "convolution " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// output << "convolution " << stage << " result" << endl;
-    decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+    // decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -162,7 +185,7 @@ void multiplexed_parallel_batch_norm_seal_print(const TensorCipher &cnn_in, Tens
 	// cout << "batch normalization " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// output << "batch normalization " << stage << " result" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -186,16 +209,16 @@ void approx_ReLU_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, l
 	// cout << "ReLU function " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// output << "ReLU function " << stage << " result" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
 	output << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
 
-	cout << "intermediate decrypted values: " << endl;
-	output << "intermediate decrypted values: " << endl;
-	decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 4, 1, output); // cnn_out.print_parms();
+	// cout << "intermediate decrypted values: " << endl;
+	// output << "intermediate decrypted values: " << endl;
+	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 4, 1, output); // cnn_out.print_parms();
 }
 void bootstrap_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, Bootstrapper &bootstrapper, ofstream &output, Decryptor &decryptor, CKKSEncoder &encoder, SEALContext &context, size_t stage)
 {
@@ -217,7 +240,7 @@ void bootstrap_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, Bootstra
 	cnn_out.set_ciphertext(rtn);
     cout << "bootstrapping " << stage << " result" << endl;
     output << "bootstrapping " << stage << " result" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -283,6 +306,29 @@ void averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &c
 	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
 
 }
+void siso_averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, ofstream &output, Decryptor &decryptor, CKKSEncoder &encoder, SEALContext &context)
+{
+    cout << "average pooling..." << endl;
+    output << "average pooling..." << endl;
+	int logn = cnn_in.logn();
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
+	time_start = chrono::high_resolution_clock::now();
+	// averagepooling_seal_scale(cnn_in, cnn_out, scale_evaluator, gal_keys, B);
+	siso_averagepooling_seal_scale(cnn_in, cnn_out, evaluator, gal_keys, B, encoder, decryptor, output);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
+	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
+	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
+	output << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
+	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
+
+}
 void fully_connected_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, vector<double> matrix, vector<double> bias, int q, int r, Evaluator &evaluator, GaloisKeys &gal_keys, ofstream &output, Decryptor &decryptor, CKKSEncoder &encoder, SEALContext &context)
 {
     cout << "fully connected layer..." << endl;
@@ -319,23 +365,15 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 		ko = ki;
 	}
 
-	vector<size_t> indices; // start indices of convolution filter
-    size_t _end = wi*wi-wi*(fw-1)-st+1;
-    for (size_t i=0;i<_end;) {
-        indices.push_back(i);
-        i+=st;
-        if ((i%wi+fw-st)%wi > 0 && (i%wi+fw-st)%wi < st) { // not divisible
-            i += (wi - i%wi) + wi*(st-1);
-        }
-        else if ((i+fw-st)%wi==0) {//end of row
-            i += floor((fw-1)/st) + wi*(st-1);
-        }
-    }
-	size_t idx_size = indices.size();
-
-	// for (int i=0;i<idx_size;i++) {
+	vector<size_t> indices(fw*fh); // indices of first conv pixels
+	for (int i=0; i<fw; i++) {
+		for (int j=0; j<fh; j++) {
+			indices[i*fw+j] = i*wi+j;
+		}
+	}
+	// for (int i=0;i<fw*fh;i++) {
 	// 	std::cout << indices[i] << " ";
-	// 	if ((i+1)%wo==0)
+	// 	if ((i+1)%fw==0)
 	// 		std::cout << std::endl;
 	// }
 
@@ -354,7 +392,7 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 
 	// copy inputs
 	Ciphertext in_copied = cnn_in.cipher();
-	for (int cc=0; cc<co; cc++) {
+	for (int cc=1; cc<co; cc++) {
 		Ciphertext tmp = cnn_in.cipher();
 		memory_save_rotate(tmp, tmp, cc*ci*wi*hi, evaluator, gal_keys);
 		evaluator.add_inplace_reduced_error(in_copied, tmp); // filter i
@@ -363,27 +401,29 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 	Ciphertext total_sum = ct_zero;
 	vector<Ciphertext> tmp_sum = vector<Ciphertext>(wo*ho, ct_zero);
 
+	// siso conv
 	#pragma omp parallel for
-	for (int i=0; i<wo*ho; i++) {
+	for (int i=0; i<fw*fh; i++) {
 		Ciphertext tmp = cnn_in.cipher();
 		memory_save_rotate(tmp, tmp, indices[i], evaluator, gal_keys);
 		Ciphertext sum = tmp;
-		for (int j=1; j<wo; j++) {
+		for (int j=1; j<ho; j++) {
 			// std::cout << "(i, j) = " << i << ", " << j << "\n";
 			Ciphertext tmp2 = tmp;
 			Ciphertext temp;
-			memory_save_rotate(tmp2, tmp2, fw*j, evaluator, gal_keys);
+			memory_save_rotate(tmp2, tmp2, indices[i]+wi*j, evaluator, gal_keys);
 			evaluator.multiply_vector_reduced_error(tmp2, myweights, temp);
 			evaluator.add_inplace_reduced_error(sum, temp); // filter i
 		}
 		evaluator.rescale_to_next_inplace(sum);
 		tmp_sum[i] = sum;
-		// evaluator.add_inplace_reduced_error(total_sum, sum); // sum of filters
 	}
-	for (int i=0; i<wo*ho; i++) {
-		evaluator.add_inplace_reduced_error(total_sum, tmp_sum[i]); // sum of filters
+	// siso conv (separated to run above in parallel)
+	for (int i=0; i<fw*fh; i++) {
+		evaluator.add_inplace_reduced_error(total_sum, tmp_sum[i]);
 	}
 
+	// rotate and sum (ci[0] + ci[1] + ... + ci[ci-1] = co[i])
 	Ciphertext temp_ = total_sum;
 	for (int i=1; i<ci; i++) {
 		Ciphertext tmp = total_sum;
@@ -391,11 +431,11 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 		evaluator.add_inplace_reduced_error(temp_, tmp); // accumulate in channels per out
 	}
 
+	// rotate and sum (accumulate output channels)
 	Ciphertext accumulated = temp_;
 	for (int i=1; i<co; i++) { // rotate to rearrange (remove gap)
 		Ciphertext tmp = temp_;
 		Ciphertext temp;
-		// memory_save_rotate(tmp, tmp, (wi*hi*ci)*i-wo*ho*i, evaluator, gal_keys);
 		memory_save_rotate(tmp, tmp, -((wi*hi*ci)*i-wo*ho*i), evaluator, gal_keys);
 		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp); //mask
 		evaluator.add_inplace_reduced_error(accumulated, temp); // accumulate in channels per out
@@ -405,7 +445,95 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 	evaluator.rescale_to_next_inplace(res);
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, res);
+}
+void repacked_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, bool end)
+{
+	// set parameters
+    vector<double> conv_data;
+	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
+	int ko = 0, ho = 0, wo = 0, to = 0, po = 0;
 
+	// set ho, wo, ko
+	if(st == 1) 
+	{
+		ho = hi-fh+1;
+		wo = wi-fw+1;
+		ko = ki;
+	}
+
+	vector<size_t> indices(fw*fh); // indices of first conv pixels
+	for (int i=0; i<fw; i++) {
+		for (int j=0; j<fh; j++) {
+			indices[i*fw+j] = i*wi+j;
+		}
+	}
+	for (int i=0;i<fw*fh;i++) {
+		std::cout << indices[i] << " ";
+		if ((i+1)%fw==0)
+			std::cout << std::endl;
+	}
+
+	// generate zero ciphertext 
+	vector<double> zero(1<<logn, 0.0);
+	Plaintext plain;
+	Ciphertext ct_zero;
+	encoder.encode(zero, cnn_in.cipher().scale(), plain);
+	encryptor.encrypt(plain, ct_zero);		// ct_zero: original scaling factor
+
+	// weight
+	vector<double> myweights(1<<logn, 0.1);
+	vector<double> mymasking(1<<logn, 1.0);
+
+	std::cout << "wo*ho = " << wo*ho << ", wo-1 = " << wo-1 << "\n";
+
+	// copy inputs
+	Ciphertext in_copied = cnn_in.cipher();
+	// for (int cc=1; cc<co; cc++) {
+	// 	Ciphertext tmp = cnn_in.cipher();
+	// 	memory_save_rotate(tmp, tmp, cc*ci*wi*hi, evaluator, gal_keys);
+	// 	evaluator.add_inplace_reduced_error(in_copied, tmp); // filter i
+	// }
+	
+	Ciphertext total_sum = ct_zero;
+	vector<Ciphertext> tmp_sum = vector<Ciphertext>(wo*ho, ct_zero);
+
+	// siso conv
+	#pragma omp parallel for
+	for (int i=0; i<fw*fh; i++) {
+		Ciphertext tmp = cnn_in.cipher();
+		// memory_save_rotate(tmp, tmp, indices[i], evaluator, gal_keys);
+		Ciphertext sum = tmp;
+		evaluator.multiply_vector_reduced_error(tmp, myweights, sum);
+		evaluator.rescale_to_next_inplace(sum);
+		tmp_sum[i] = sum;
+	}
+	// siso conv (separated to run above in parallel)
+	for (int i=0; i<fw*fh; i++) {
+		evaluator.add_inplace_reduced_error(total_sum, tmp_sum[i]);
+	}
+
+	// rotate and sum (ci[0] + ci[1] + ... + ci[ci-1] = co[i])
+	Ciphertext temp_ = total_sum;
+	for (int i=1; i<ci; i++) {
+		Ciphertext tmp = total_sum;
+		memory_save_rotate(tmp, tmp, wo*ho*i, evaluator, gal_keys);
+		evaluator.add_inplace_reduced_error(temp_, tmp); // accumulate in channels per out
+	}
+
+	// rotate and sum (accumulate output channels)
+	Ciphertext accumulated = temp_;
+	for (int i=1; i<co; i++) { // rotate to rearrange (remove gap)
+		Ciphertext tmp = temp_;
+		Ciphertext temp;
+		memory_save_rotate(tmp, tmp, -((wi*hi*ci)*i-wo*ho*i), evaluator, gal_keys);
+		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp); //mask
+		evaluator.add_inplace_reduced_error(accumulated, temp); // accumulate in channels per out
+	}
+
+	Ciphertext res = accumulated;
+	evaluator.rescale_to_next_inplace(res);
+
+	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, res);
 }
 void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, vector<double> running_var, vector<double> constant_weight, double epsilon, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, bool end)
 {
@@ -869,6 +997,49 @@ void averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, 1, sum);
 	
+}
+void siso_averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, CKKSEncoder &encoder, Decryptor &decryptor, ofstream &output)
+{
+	// st=2, fh=fw=2
+	// set parameters
+    vector<double> conv_data;
+	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
+	int ko = 0, ho = 0, wo = 0, to = 0, po = 0;
+	int st = 2, fh = 2, fw = 2, co = ci;
+
+	// set ho, wo, ko
+	ho = hi/2;
+	wo = wi/2;
+	ko = ki*st;
+
+	// masking
+	vector<double> mymasking(1<<logn, 1.0);
+
+	// pool
+	Ciphertext tmp = cnn_in.cipher();
+	Ciphertext tmp2;
+	memory_save_rotate(tmp, tmp2, -wi, evaluator, gal_keys);
+	evaluator.add_inplace_reduced_error(tmp, tmp2);
+	memory_save_rotate(tmp2, tmp2, -1, evaluator, gal_keys);
+	evaluator.add_inplace_reduced_error(tmp, tmp2); // 0, ##, 1, ##, 2, ##, ..
+
+	Ciphertext accumulated = tmp;
+	vector<Ciphertext> tmp_(wo*ho);
+
+	#pragma omp parallel for
+	for (int i=1; i<wo*ho; i++) {
+		Ciphertext temp = tmp;
+		Ciphertext temp_;
+		memory_save_rotate(temp, temp, -i, evaluator, gal_keys); // TODO: slot
+		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp_); // avg & mask
+		tmp_[i] = temp_;
+	}
+	for (int i=1; i<wo*ho; i++) {
+		evaluator.add_inplace_reduced_error(accumulated, tmp_[i]); // 0, 1, 2, 3, ..
+	}
+	evaluator.rescale_to_next_inplace(accumulated);
+
+	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, accumulated);
 }
 void matrix_multiplication_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, vector<double> matrix, vector<double> bias, int q, int r, Evaluator &evaluator, GaloisKeys &gal_keys)
 {

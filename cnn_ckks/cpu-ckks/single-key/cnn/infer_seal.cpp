@@ -1,4 +1,5 @@
 #include "infer_seal.h"
+#include "examples.h"
 
 void import_parameters_mnist(vector<vector<double>> &linear_weight, vector<vector<double>> &linear_bias, vector<vector<double>> &conv_weight, vector<vector<double>> &bn_bias, vector<vector<double>> &bn_running_mean, vector<vector<double>> &bn_running_var, vector<vector<double>> &bn_weight, size_t layer_num, size_t end_num)
 {
@@ -341,11 +342,31 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 	int log_special_prime = 60;
     int log_integer_part = logq - logp - loge + 5;
 	int remaining_level = 17; // Calculation required
-	int boot_level = 14; // 
+	int boot_level = 14;
 	int total_level = remaining_level + boot_level;
 
+	// SEAL and Repacking setting
+	// long boundary_K = 25;
+	// long boot_deg = 60;
+    // long scale_factor = 2;
+    // long inverse_deg = 1; 
+	// long logN = 16;
+	// long loge = 10; 
+	// long logn = 15;		// full slots
+	// long logn_1 = 14;	// sparse slots
+	// long logn_2 = 13;
+	// long logn_3 = 12;
+	// int logp = 45;
+	// int logq = 45; //51;
+	// int log_special_prime = 60;
+    // int log_integer_part = logq - logp - loge + 5;
+	// int remaining_level = 2; //17; // Calculation required
+	// int boot_level = 10; //14;
+	// int total_level = remaining_level + boot_level;
+
 	vector<int> coeff_bit_vec;
-	coeff_bit_vec.push_back(logq);
+	// coeff_bit_vec.push_back(logp);
+	coeff_bit_vec.push_back(60);
 	for (int i = 0; i < remaining_level; i++) coeff_bit_vec.push_back(logp);
 	for (int i = 0; i < boot_level; i++) coeff_bit_vec.push_back(logq);
 	coeff_bit_vec.push_back(log_special_prime);
@@ -363,6 +384,7 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 	double scale = pow(2.0, logp);
 
 	SEALContext context(parms);
+	print_parameters(context);
 	// KeyGenerator keygen(context, 192);
 	KeyGenerator keygen(context);
     PublicKey public_key;
@@ -492,6 +514,7 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 		output << "layer 0" << endl;
 		// multiplexed_parallel_convolution_print(cnn, cnn, 6, 1, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
 		siso_convolution_seal_print(cnn, cnn, 6, 1, 5, 5, conv_weight[stage], encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage, end_num);
+		// repacked_convolution_seal_print(cnn, cnn, 16, 1, 5, 5, conv_weight[stage], encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage, end_num);
 
 		// scaling factor ~2^51 -> 2^46
 		const auto &modulus = iter(context.first_context_data()->parms().coeff_modulus());
@@ -509,10 +532,10 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 		cout << "layer 1" << endl;
 		output << "layer 1" << endl;
 		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
-		
-		// cout << "layer " << layer_num - 1 << endl;
-		// output << "layer " << layer_num - 1 << endl;
-		// averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
+
+		cout << "layer 2" << endl;
+		output << "layer 2" << endl;
+		siso_averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
 
 		stage = 0;
 		// classifier: fc layers 
@@ -522,9 +545,9 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 		total_time_diff = chrono::duration_cast<chrono::milliseconds>(total_time_end - total_time_start);
 
 		// final text file print
-		Plaintext plain;
-		decryptor.decrypt(cnn.cipher(), plain);
-		vector<complex<double>> rtn_vec;
+		// Plaintext plain;
+		// decryptor.decrypt(cnn.cipher(), plain);
+		// vector<complex<double>> rtn_vec;
 		// encoder.decode(plain, rtn_vec, 1<<logn);
 		// encoder.decode(plain, rtn_vec);
 		// cout << "( "; 
