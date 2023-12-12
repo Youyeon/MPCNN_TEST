@@ -47,7 +47,7 @@ void minimax_ReLU_seal(long comp_no, vector<int> deg, long alpha, vector<Tree> &
 		// cout << "*******************************************" << endl;
 		// cout << "               No: " << i << endl;
 		eval_polynomial_integrate(encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, cipher_x, cipher_x, deg[i], decomp_coeff[i], tree[i]); 
-		decrypt_and_print_part(cipher_x, decryptor, encoder, n, 0, 5);
+		// decrypt_and_print_part(cipher_x, decryptor, encoder, n, 0, 5);
 	}
 
 	// x(1+sgn(x))/2 from sgn(x)/2

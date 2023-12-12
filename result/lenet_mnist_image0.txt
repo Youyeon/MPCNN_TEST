@@ -1,2 +1,19 @@
 layer 0
 siso convolution...
+time : 275150 ms
+remaining level : 18
+scale: 2.2518e+15
+
+layer 1
+approximate ReLU...
+time : 11730 ms
+remaining level : 3
+scale: 3.52957e+13
+
+layer 2
+average pooling...
+time : 5447 ms
+remaining level : 2
+scale: 3.54075e+13
+
+total time : 292500 ms

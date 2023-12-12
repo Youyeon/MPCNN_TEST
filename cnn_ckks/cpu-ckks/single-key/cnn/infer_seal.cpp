@@ -393,52 +393,52 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
     RelinKeys relin_keys;
 	keygen.create_relin_keys(relin_keys);
 	GaloisKeys gal_keys;
-	keygen.create_galois_keys(gal_keys); // to be replaced by bootstrapper
+	// keygen.create_galois_keys(gal_keys); // to be replaced by bootstrapper
 
 	CKKSEncoder encoder(context);
 	Encryptor encryptor(context, public_key);
 	Evaluator evaluator(context, encoder);
 	Decryptor decryptor(context, secret_key);
 
-// 	Bootstrapper bootstrapper(loge, logn_1, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
+	Bootstrapper bootstrapper(loge, logn_1, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
 
-// //	additional rotation kinds for CNN
-// 	vector<int> rotation_kinds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
-// 		// ,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55
-// 		,56
-// 		// ,57,58,59,60,61
-// 		,62,63,64,66,84,124,128,132,256,512,959,960,990,991,1008
-// 		,1023,1024,1036,1064,1092,1952,1982,1983,2016,2044,2047,2048,2072,2078,2100,3007,3024,3040,3052,3070,3071,3072,3080,3108,4031
-// 		,4032,4062,4063,4095,4096,5023,5024,5054,5055,5087,5118,5119,5120,6047,6078,6079,6111,6112,6142,6143,6144,7071,7102,7103,7135
-// 		,7166,7167,7168,8095,8126,8127,8159,8190,8191,8192,9149,9183,9184,9213,9215,9216,10173,10207,10208,10237,10239,10240,11197,11231
-// 		,11232,11261,11263,11264,12221,12255,12256,12285,12287,12288,13214,13216,13246,13278,13279,13280,13310,13311,13312,14238,14240
-// 		,14270,14302,14303,14304,14334,14335,15262,15264,15294,15326,15327,15328,15358,15359,15360,16286,16288,16318,16350,16351,16352
-// 		,16382,16383,16384,17311,17375,18335,18399,18432,19359,19423,20383,20447,20480,21405,21406,21437,21469,21470,21471,21501,21504
-// 		,22429,22430,22461,22493,22494,22495,22525,22528,23453,23454,23485,23517,23518,23519,23549,24477,24478,24509,24541,24542,24543
-// 		,24573,24576,25501,25565,25568,25600,26525,26589,26592,26624,27549,27613,27616,27648,28573,28637,28640,28672,29600,29632,29664
-// 		,29696,30624,30656,30688,30720,31648,31680,31712,31743,31744,31774,32636,32640,32644,32672,32702,32704,32706,32735
-// 		,32736,32737,32759,32760,32761,32762,32763,32764,32765,32766,32767
-// 	};
+//	additional rotation kinds for CNN
+	vector<int> rotation_kinds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
+		// ,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55
+		,56
+		// ,57,58,59,60,61
+		,62,63,64,66,84,124,128,132,256,512,959,960,990,991,1008
+		,1023,1024,1036,1064,1092,1952,1982,1983,2016,2044,2047,2048,2072,2078,2100,3007,3024,3040,3052,3070,3071,3072,3080,3108,4031
+		,4032,4062,4063,4095,4096,5023,5024,5054,5055,5087,5118,5119,5120,6047,6078,6079,6111,6112,6142,6143,6144,7071,7102,7103,7135
+		,7166,7167,7168,8095,8126,8127,8159,8190,8191,8192,9149,9183,9184,9213,9215,9216,10173,10207,10208,10237,10239,10240,11197,11231
+		,11232,11261,11263,11264,12221,12255,12256,12285,12287,12288,13214,13216,13246,13278,13279,13280,13310,13311,13312,14238,14240
+		,14270,14302,14303,14304,14334,14335,15262,15264,15294,15326,15327,15328,15358,15359,15360,16286,16288,16318,16350,16351,16352
+		,16382,16383,16384,17311,17375,18335,18399,18432,19359,19423,20383,20447,20480,21405,21406,21437,21469,21470,21471,21501,21504
+		,22429,22430,22461,22493,22494,22495,22525,22528,23453,23454,23485,23517,23518,23519,23549,24477,24478,24509,24541,24542,24543
+		,24573,24576,25501,25565,25568,25600,26525,26589,26592,26624,27549,27613,27616,27648,28573,28637,28640,28672,29600,29632,29664
+		,29696,30624,30656,30688,30720,31648,31680,31712,31743,31744,31774,32636,32640,32644,32672,32702,32704,32706,32735
+		,32736,32737,32759,32760,32761,32762,32763,32764,32765,32766,32767
+	};
 
-// 	// bootstrapping preprocessing
-// 	cout << "Generating Optimal Minimax Polynomials..." << endl;
-// 	bootstrapper.prepare_mod_polynomial();
+	// bootstrapping preprocessing
+	cout << "Generating Optimal Minimax Polynomials..." << endl;
+	bootstrapper.prepare_mod_polynomial();
 
-// 	cout << "Adding Bootstrapping Keys..." << endl;
-// 	vector<int> gal_steps_vector;
-// 	gal_steps_vector.push_back(0);
-// 	for(int i=0; i<logN-1; i++) gal_steps_vector.push_back((1 << i));
-// 	for(auto rot: rotation_kinds)
-// 	{
-// 		if(find(gal_steps_vector.begin(), gal_steps_vector.end(), rot) == gal_steps_vector.end()) gal_steps_vector.push_back(rot);
-// 	} 
-// 	bootstrapper.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
-// 	keygen.create_galois_keys(gal_steps_vector, gal_keys);
+	cout << "Adding Bootstrapping Keys..." << endl;
+	vector<int> gal_steps_vector;
+	gal_steps_vector.push_back(0);
+	for(int i=0; i<logN-1; i++) gal_steps_vector.push_back((1 << i));
+	for(auto rot: rotation_kinds)
+	{
+		if(find(gal_steps_vector.begin(), gal_steps_vector.end(), rot) == gal_steps_vector.end()) gal_steps_vector.push_back(rot);
+	} 
+	bootstrapper.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
+	keygen.create_galois_keys(gal_steps_vector, gal_keys);
 
-// 	bootstrapper.slot_vec.push_back(logn_1);
+	bootstrapper.slot_vec.push_back(logn_1);
 
-// 	cout << "Generating Linear Transformation Coefficients..." << endl;
-// 	bootstrapper.generate_LT_coefficient_3();
+	cout << "Generating Linear Transformation Coefficients..." << endl;
+	bootstrapper.generate_LT_coefficient_3();
 
 	// time setting
 	chrono::high_resolution_clock::time_point all_time_start, all_time_end;
@@ -512,7 +512,6 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 		// layer 0
 		cout << "layer 0" << endl;
 		output << "layer 0" << endl;
-		// multiplexed_parallel_convolution_print(cnn, cnn, 6, 1, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
 		siso_convolution_seal_print(cnn, cnn, 6, 1, 5, 5, conv_weight[stage], encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage, end_num);
 		// repacked_convolution_seal_print(cnn, cnn, 16, 1, 5, 5, conv_weight[stage], encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage, end_num);
 
@@ -537,9 +536,47 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 		output << "layer 2" << endl;
 		siso_averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
 
+		bootstrap_print(cnn, cnn, bootstrapper, output, decryptor, encoder, context, stage);
+
+		cout << "layer 3" << endl;
+		output << "layer 3" << endl;
+		siso_convolution_seal_print(cnn, cnn, 16, 1, 5, 5, conv_weight[stage], encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage, end_num);
+
+		cout << "layer 4" << endl;
+		output << "layer 4" << endl;
+		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
+
+		cout << "layer 5" << endl;
+		output << "layer 5" << endl;
+		siso_averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
+
+		bootstrap_print(cnn, cnn, bootstrapper, output, decryptor, encoder, context, stage);
+
 		stage = 0;
 		// classifier: fc layers 
-		// fully_connected_seal_print(cnn, cnn, linear_weight[stage], linear_bias[stage], 256, 128, evaluator, gal_keys, output, decryptor, encoder, context);
+		cout << "layer 5" << endl;
+		output << "layer 5" << endl;
+		fully_connected_seal_print(cnn, cnn, linear_weight[stage], linear_bias[stage], 256, 128, evaluator, gal_keys, output, decryptor, encoder, context);
+
+		cout << "layer 6" << endl;
+		output << "layer 6" << endl;
+		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
+
+		bootstrap_print(cnn, cnn, bootstrapper, output, decryptor, encoder, context, stage);
+
+		cout << "layer 7" << endl;
+		output << "layer 7" << endl;
+		fully_connected_seal_print(cnn, cnn, linear_weight[stage], linear_bias[stage], 128, 84, evaluator, gal_keys, output, decryptor, encoder, context);
+
+		cout << "layer 6" << endl;
+		output << "layer 6" << endl;
+		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
+
+		bootstrap_print(cnn, cnn, bootstrapper, output, decryptor, encoder, context, stage);
+
+		cout << "layer 8" << endl;
+		output << "layer 8" << endl;
+		fully_connected_seal_print(cnn, cnn, linear_weight[stage], linear_bias[stage], 84, 10, evaluator, gal_keys, output, decryptor, encoder, context);
 
 		total_time_end = chrono::high_resolution_clock::now();
 		total_time_diff = chrono::duration_cast<chrono::milliseconds>(total_time_end - total_time_start);
