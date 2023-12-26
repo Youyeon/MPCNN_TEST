@@ -1,8 +1,8 @@
-layer 0
-multiplexed parallel convolution...
 k: 1
 h: 32
 w: 32
 c: 3
 t: 3
 p: 8
+layer 0
+multiplexed parallel convolution...

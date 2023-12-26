@@ -363,7 +363,7 @@ void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end
 	int logq = 45; //51;
 	int log_special_prime = 60;
     int log_integer_part = logq - logp - loge + 5;
-	int remaining_level = 17; // 19; // Calculation required
+	int remaining_level = 2; // 19; // Calculation required
 	int boot_level = 10; //10; // greater than: subsum 1 + coefftoslot 2 + ModReduction 9 + slottocoeff 2 
 	int total_level = remaining_level + boot_level;
 
@@ -682,62 +682,62 @@ void ResNet_cifar10_seal_sparse_my(size_t layer_num, size_t start_image_id, size
     RelinKeys relin_keys;
 	keygen.create_relin_keys(relin_keys);
 	GaloisKeys gal_keys;
-	// keygen.create_galois_keys(gal_keys); // to be replaced by bootstrapper
+	keygen.create_galois_keys(gal_keys); // to be replaced by bootstrapper
 
 	CKKSEncoder encoder(context);
 	Encryptor encryptor(context, public_key);
 	Evaluator evaluator(context, encoder);
 	Decryptor decryptor(context, secret_key);
 
-	Bootstrapper bootstrapper_1(loge, logn_1, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
-	Bootstrapper bootstrapper_2(loge, logn_2, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
-	Bootstrapper bootstrapper_3(loge, logn_3, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
+	// Bootstrapper bootstrapper_1(loge, logn_1, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
+	// Bootstrapper bootstrapper_2(loge, logn_2, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
+	// Bootstrapper bootstrapper_3(loge, logn_3, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
 
-	//	additional rotation kinds for CNN
-	vector<int> rotation_kinds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
-		// ,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55
-		,56
-		// ,57,58,59,60,61
-		,62,63,64,66,84,124,128,132,256,512,959,960,990,991,1008
-		,1023,1024,1036,1064,1092,1952,1982,1983,2016,2044,2047,2048,2072,2078,2100,3007,3024,3040,3052,3070,3071,3072,3080,3108,4031
-		,4032,4062,4063,4095,4096,5023,5024,5054,5055,5087,5118,5119,5120,6047,6078,6079,6111,6112,6142,6143,6144,7071,7102,7103,7135
-		,7166,7167,7168,8095,8126,8127,8159,8190,8191,8192,9149,9183,9184,9213,9215,9216,10173,10207,10208,10237,10239,10240,11197,11231
-		,11232,11261,11263,11264,12221,12255,12256,12285,12287,12288,13214,13216,13246,13278,13279,13280,13310,13311,13312,14238,14240
-		,14270,14302,14303,14304,14334,14335,15262,15264,15294,15326,15327,15328,15358,15359,15360,16286,16288,16318,16350,16351,16352
-		,16382,16383,16384,17311,17375,18335,18399,18432,19359,19423,20383,20447,20480,21405,21406,21437,21469,21470,21471,21501,21504
-		,22429,22430,22461,22493,22494,22495,22525,22528,23453,23454,23485,23517,23518,23519,23549,24477,24478,24509,24541,24542,24543
-		,24573,24576,25501,25565,25568,25600,26525,26589,26592,26624,27549,27613,27616,27648,28573,28637,28640,28672,29600,29632,29664
-		,29696,30624,30656,30688,30720,31648,31680,31712,31743,31744,31774,32636,32640,32644,32672,32702,32704,32706,32735
-		,32736,32737,32759,32760,32761,32762,32763,32764,32765,32766,32767
-	};
+	// //	additional rotation kinds for CNN
+	// vector<int> rotation_kinds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
+	// 	// ,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55
+	// 	,56
+	// 	// ,57,58,59,60,61
+	// 	,62,63,64,66,84,124,128,132,256,512,959,960,990,991,1008
+	// 	,1023,1024,1036,1064,1092,1952,1982,1983,2016,2044,2047,2048,2072,2078,2100,3007,3024,3040,3052,3070,3071,3072,3080,3108,4031
+	// 	,4032,4062,4063,4095,4096,5023,5024,5054,5055,5087,5118,5119,5120,6047,6078,6079,6111,6112,6142,6143,6144,7071,7102,7103,7135
+	// 	,7166,7167,7168,8095,8126,8127,8159,8190,8191,8192,9149,9183,9184,9213,9215,9216,10173,10207,10208,10237,10239,10240,11197,11231
+	// 	,11232,11261,11263,11264,12221,12255,12256,12285,12287,12288,13214,13216,13246,13278,13279,13280,13310,13311,13312,14238,14240
+	// 	,14270,14302,14303,14304,14334,14335,15262,15264,15294,15326,15327,15328,15358,15359,15360,16286,16288,16318,16350,16351,16352
+	// 	,16382,16383,16384,17311,17375,18335,18399,18432,19359,19423,20383,20447,20480,21405,21406,21437,21469,21470,21471,21501,21504
+	// 	,22429,22430,22461,22493,22494,22495,22525,22528,23453,23454,23485,23517,23518,23519,23549,24477,24478,24509,24541,24542,24543
+	// 	,24573,24576,25501,25565,25568,25600,26525,26589,26592,26624,27549,27613,27616,27648,28573,28637,28640,28672,29600,29632,29664
+	// 	,29696,30624,30656,30688,30720,31648,31680,31712,31743,31744,31774,32636,32640,32644,32672,32702,32704,32706,32735
+	// 	,32736,32737,32759,32760,32761,32762,32763,32764,32765,32766,32767
+	// };
 
-	// // bootstrapping preprocessing
-	cout << "Generating Optimal Minimax Polynomials..." << endl;
-	bootstrapper_1.prepare_mod_polynomial();
-	bootstrapper_2.prepare_mod_polynomial();
-	bootstrapper_3.prepare_mod_polynomial();
+	// // // bootstrapping preprocessing
+	// cout << "Generating Optimal Minimax Polynomials..." << endl;
+	// bootstrapper_1.prepare_mod_polynomial();
+	// bootstrapper_2.prepare_mod_polynomial();
+	// bootstrapper_3.prepare_mod_polynomial();
 
-	cout << "Adding Bootstrapping Keys..." << endl;
-	vector<int> gal_steps_vector;
-	gal_steps_vector.push_back(0);
-	for(int i=0; i<logN-1; i++) gal_steps_vector.push_back((1 << i));
-	for(auto rot: rotation_kinds)
-	{
-		if(find(gal_steps_vector.begin(), gal_steps_vector.end(), rot) == gal_steps_vector.end()) gal_steps_vector.push_back(rot);
-	} 
-	bootstrapper_1.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
-	bootstrapper_2.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
-	bootstrapper_3.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
-	keygen.create_galois_keys(gal_steps_vector, gal_keys);
+	// cout << "Adding Bootstrapping Keys..." << endl;
+	// vector<int> gal_steps_vector;
+	// gal_steps_vector.push_back(0);
+	// for(int i=0; i<logN-1; i++) gal_steps_vector.push_back((1 << i));
+	// for(auto rot: rotation_kinds)
+	// {
+	// 	if(find(gal_steps_vector.begin(), gal_steps_vector.end(), rot) == gal_steps_vector.end()) gal_steps_vector.push_back(rot);
+	// } 
+	// bootstrapper_1.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
+	// bootstrapper_2.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
+	// bootstrapper_3.addLeftRotKeys_Linear_to_vector_3(gal_steps_vector);
+	// keygen.create_galois_keys(gal_steps_vector, gal_keys);
 
-	bootstrapper_1.slot_vec.push_back(logn_1);
-	bootstrapper_2.slot_vec.push_back(logn_2);
-	bootstrapper_3.slot_vec.push_back(logn_3);
+	// bootstrapper_1.slot_vec.push_back(logn_1);
+	// bootstrapper_2.slot_vec.push_back(logn_2);
+	// bootstrapper_3.slot_vec.push_back(logn_3);
 
-	cout << "Generating Linear Transformation Coefficients..." << endl;
-	bootstrapper_1.generate_LT_coefficient_3();
-	bootstrapper_2.generate_LT_coefficient_3();
-	bootstrapper_3.generate_LT_coefficient_3();
+	// cout << "Generating Linear Transformation Coefficients..." << endl;
+	// bootstrapper_1.generate_LT_coefficient_3();
+	// bootstrapper_2.generate_LT_coefficient_3();
+	// bootstrapper_3.generate_LT_coefficient_3();
 
 	// time setting
 	chrono::high_resolution_clock::time_point all_time_start, all_time_end;
@@ -753,7 +753,7 @@ void ResNet_cifar10_seal_sparse_my(size_t layer_num, size_t start_image_id, size
 	else if(layer_num == 110) end_num = 17;	// 0 ~ 17
 	else throw std::invalid_argument("layer_num is not correct");
 
-	#pragma omp parallel for num_threads(50)
+	// #pragma omp parallel for num_threads(50)
 	for(size_t image_id = start_image_id; image_id <=end_image_id; image_id++)
 	{
 		// each thread output result file
@@ -803,7 +803,8 @@ void ResNet_cifar10_seal_sparse_my(size_t layer_num, size_t start_image_id, size
 
 		// generate CIFAR-10 image
 		cnn = TensorCipher(logn, 1, 32, 32, 3, 3, init_p, image, encryptor, encoder, logq);
-		// decrypt_and_print(cnn.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn.print_parms();
+		// decrypt_and_print(cnn.cipher(), decryptor, encoder, 1<<logn, 256, 2); 
+		cnn.print_parms_log(output);
 		cout << "remaining level : " << context.get_context_data(cnn.cipher().parms_id())->chain_index() << endl;
 		cout << "scale: " << cnn.cipher().scale() << endl;
 		total_time_start = chrono::high_resolution_clock::now();
@@ -835,84 +836,84 @@ void ResNet_cifar10_seal_sparse_my(size_t layer_num, size_t start_image_id, size
 		multiplexed_parallel_batch_norm_seal_print(cnn, cnn, bn_bias[stage], bn_running_mean[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, B, output, decryptor, context, stage);
 		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
 
-		for(int j=0; j<3; j++)		// layer 1_x, 2_x, 3_x
-		{
-			if(j==0) co = 16;
-			else if(j==1) co = 32;
-			else if(j==2) co = 64;
+		// for(int j=0; j<3; j++)		// layer 1_x, 2_x, 3_x
+		// {
+		// 	if(j==0) co = 16;
+		// 	else if(j==1) co = 32;
+		// 	else if(j==2) co = 64;
 
-			for(int k=0; k<=end_num; k++)	// 0 ~ 2/4/6/8/17
-			{
-				stage = 2*((end_num+1)*j+k)+1;
-				cout << "layer " << stage << endl;
-				output << "layer " << stage << endl;
-				temp = cnn;
-				if(j>=1 && k==0) st = 2;
-				else st = 1;
-				multiplexed_parallel_convolution_print(cnn, cnn, co, st, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
-				multiplexed_parallel_batch_norm_seal_print(cnn, cnn, bn_bias[stage], bn_running_mean[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, B, output, decryptor, context, stage);
-				if(j==0) bootstrap_print(cnn, cnn, bootstrapper_1, output, decryptor, encoder, context, stage);
-				else if(j==1) bootstrap_print(cnn, cnn, bootstrapper_2, output, decryptor, encoder, context, stage);
-				else if(j==2) bootstrap_print(cnn, cnn, bootstrapper_3, output, decryptor, encoder, context, stage);
-				approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
+		// 	for(int k=0; k<=end_num; k++)	// 0 ~ 2/4/6/8/17
+		// 	{
+		// 		stage = 2*((end_num+1)*j+k)+1;
+		// 		cout << "layer " << stage << endl;
+		// 		output << "layer " << stage << endl;
+		// 		temp = cnn;
+		// 		if(j>=1 && k==0) st = 2;
+		// 		else st = 1;
+		// 		multiplexed_parallel_convolution_print(cnn, cnn, co, st, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
+		// 		multiplexed_parallel_batch_norm_seal_print(cnn, cnn, bn_bias[stage], bn_running_mean[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, B, output, decryptor, context, stage);
+		// 		if(j==0) bootstrap_print(cnn, cnn, bootstrapper_1, output, decryptor, encoder, context, stage);
+		// 		else if(j==1) bootstrap_print(cnn, cnn, bootstrapper_2, output, decryptor, encoder, context, stage);
+		// 		else if(j==2) bootstrap_print(cnn, cnn, bootstrapper_3, output, decryptor, encoder, context, stage);
+		// 		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);
 
-				stage = 2*((end_num+1)*j+k)+2;
-				cout << "layer " << stage << endl;
-				output << "layer " << stage << endl;
-				st = 1;
+		// 		stage = 2*((end_num+1)*j+k)+2;
+		// 		cout << "layer " << stage << endl;
+		// 		output << "layer " << stage << endl;
+		// 		st = 1;
 
-				multiplexed_parallel_convolution_print(cnn, cnn, co, st, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
-				multiplexed_parallel_batch_norm_seal_print(cnn, cnn, bn_bias[stage], bn_running_mean[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, B, output, decryptor, context, stage);
-				if(j>=1 && k==0) multiplexed_parallel_downsampling_seal_print(temp, temp, evaluator, decryptor, encoder, context, gal_keys, output);
-				cipher_add_seal_print(temp, cnn, cnn, evaluator, output, decryptor, encoder, context);
-				if(j==0) bootstrap_print(cnn, cnn, bootstrapper_1, output, decryptor, encoder, context, stage);
-				else if(j==1) bootstrap_print(cnn, cnn, bootstrapper_2, output, decryptor, encoder, context, stage);
-				else if(j==2) bootstrap_print(cnn, cnn, bootstrapper_3, output, decryptor, encoder, context, stage);
-				approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);		
-			}
-		}
-		cout << "layer " << layer_num - 1 << endl;
-		output << "layer " << layer_num - 1 << endl;
-		averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
-		fully_connected_seal_print(cnn, cnn, linear_weight, linear_bias, 10, 64, evaluator, gal_keys, output, decryptor, encoder, context);
+		// 		multiplexed_parallel_convolution_print(cnn, cnn, co, st, fh, fw, conv_weight[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, output, decryptor, context, stage);
+		// 		multiplexed_parallel_batch_norm_seal_print(cnn, cnn, bn_bias[stage], bn_running_mean[stage], bn_running_var[stage], bn_weight[stage], epsilon, encoder, encryptor, evaluator, B, output, decryptor, context, stage);
+		// 		if(j>=1 && k==0) multiplexed_parallel_downsampling_seal_print(temp, temp, evaluator, decryptor, encoder, context, gal_keys, output);
+		// 		cipher_add_seal_print(temp, cnn, cnn, evaluator, output, decryptor, encoder, context);
+		// 		if(j==0) bootstrap_print(cnn, cnn, bootstrapper_1, output, decryptor, encoder, context, stage);
+		// 		else if(j==1) bootstrap_print(cnn, cnn, bootstrapper_2, output, decryptor, encoder, context, stage);
+		// 		else if(j==2) bootstrap_print(cnn, cnn, bootstrapper_3, output, decryptor, encoder, context, stage);
+		// 		approx_ReLU_seal_print(cnn, cnn, comp_no, deg, alpha, tree, scaled_val, logp, encryptor, evaluator, decryptor, encoder, public_key, secret_key, relin_keys, B, output, context, gal_keys, stage);		
+		// 	}
+		// }
+		// cout << "layer " << layer_num - 1 << endl;
+		// output << "layer " << layer_num - 1 << endl;
+		// averagepooling_seal_scale_print(cnn, cnn, evaluator, gal_keys, B, output, decryptor, encoder, context);
+		// fully_connected_seal_print(cnn, cnn, linear_weight, linear_bias, 10, 64, evaluator, gal_keys, output, decryptor, encoder, context);
 
 		total_time_end = chrono::high_resolution_clock::now();
 		total_time_diff = chrono::duration_cast<chrono::milliseconds>(total_time_end - total_time_start);
 
-		// final text file print
-		Plaintext plain;
-		decryptor.decrypt(cnn.cipher(), plain);
-		vector<complex<double>> rtn_vec;
-		// encoder.decode(plain, rtn_vec, 1<<logn);
-		encoder.decode(plain, rtn_vec);
-		cout << "( "; 
-		output << "( "; 
-		for (size_t i = 0; i < 9; i++) {
-			cout << rtn_vec[i] << ", ";
-			output << rtn_vec[i] << ", ";
-		}
-		cout << rtn_vec[9] << ")" << endl;
-		output << rtn_vec[9] << ")" << endl;
-		cout << "total time : " << total_time_diff.count() / 1000 << " ms" << endl;
-		output << "total time : " << total_time_diff.count() / 1000 << " ms" << endl;
+		// // final text file print
+		// Plaintext plain;
+		// decryptor.decrypt(cnn.cipher(), plain);
+		// vector<complex<double>> rtn_vec;
+		// // encoder.decode(plain, rtn_vec, 1<<logn);
+		// encoder.decode(plain, rtn_vec);
+		// cout << "( "; 
+		// output << "( "; 
+		// for (size_t i = 0; i < 9; i++) {
+		// 	cout << rtn_vec[i] << ", ";
+		// 	output << rtn_vec[i] << ", ";
+		// }
+		// cout << rtn_vec[9] << ")" << endl;
+		// output << rtn_vec[9] << ")" << endl;
+		// cout << "total time : " << total_time_diff.count() / 1000 << " ms" << endl;
+		// output << "total time : " << total_time_diff.count() / 1000 << " ms" << endl;
 
-		size_t label = 0;
-		double max_score = -100.0;
-		for(size_t i=0; i<10; i++)
-		{
-			if(max_score < rtn_vec[i].real())
-			{
-				label = i;
-				max_score = rtn_vec[i].real();
-			}
-		}
-		cout << "image label: " << image_label << endl;
-		cout << "inferred label: " << label << endl;
-		cout << "max score: " << max_score << endl;
-		output << "image label: " << image_label << endl;
-		output << "inferred label: " << label << endl;
-		output << "max score: " << max_score << endl;
-		out_share << "image_id: " << image_id << ", " << "image label: " << image_label << ", inferred label: " << label << endl;
+		// size_t label = 0;
+		// double max_score = -100.0;
+		// for(size_t i=0; i<10; i++)
+		// {
+		// 	if(max_score < rtn_vec[i].real())
+		// 	{
+		// 		label = i;
+		// 		max_score = rtn_vec[i].real();
+		// 	}
+		// }
+		// cout << "image label: " << image_label << endl;
+		// cout << "inferred label: " << label << endl;
+		// cout << "max score: " << max_score << endl;
+		// output << "image label: " << image_label << endl;
+		// output << "inferred label: " << label << endl;
+		// output << "max score: " << max_score << endl;
+		// out_share << "image_id: " << image_id << ", " << "image label: " << image_label << ", inferred label: " << label << endl;
 
 	}
 
@@ -1015,7 +1016,7 @@ void ResNet_cifar10_seal_sparse(size_t layer_num, size_t start_image_id, size_t 
 	Bootstrapper bootstrapper_2(loge, logn_2, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
 	Bootstrapper bootstrapper_3(loge, logn_3, logN - 1, total_level, scale, boundary_K, boot_deg, scale_factor, inverse_deg, context, keygen, encoder, encryptor, decryptor, evaluator, relin_keys, gal_keys);
 
-//	additional rotation kinds for CNN
+	//	additional rotation kinds for CNN
 	vector<int> rotation_kinds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
 		// ,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55
 		,56

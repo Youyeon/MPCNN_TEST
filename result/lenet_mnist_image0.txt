@@ -1,19 +1,8 @@
-layer 1
-fully connected layer...
-time : 66631 ms
-remaining level : 18
-scale: 3.51844e+13
-
-layer 4
-approximate ReLU...
-time : 11444 ms
-remaining level : 4
-scale: 3.61003e+13
-
-layer 1
-fully connected layer...
-time : 3997 ms
-remaining level : 3
-scale: 3.70401e+13
-
-total time : 82146 ms
+layer 0
+siso convolution...
+k: 1
+h: 28
+w: 28
+c: 1
+t: 1
+p: 8

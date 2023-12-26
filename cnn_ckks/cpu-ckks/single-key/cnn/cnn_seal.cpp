@@ -165,7 +165,7 @@ void multiplexed_parallel_convolution_print(const TensorCipher &cnn_in, TensorCi
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
-	cnn_in.print_parms_log(output);
+	// cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	// convolution_seal_sparse(cnn_in, cnn_out, hprime, st, kernel, false, data, running_var, constant_weight, epsilon, encoder, encryptor, scale_evaluator, gal_keys, cipher_pool, end);
 	multiplexed_parallel_convolution_seal(cnn_in, cnn_out, co, st, fh, fw, data, running_var, constant_weight, epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, end);
@@ -694,6 +694,8 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 	to = (co+ko*ko-1) / (ko*ko);
 	po =  pow2(floor_to_int(log(static_cast<double>(n)/static_cast<double>(ko*ko*ho*wo*to)) / log(2.0)));
 	long q = (co+pi-1)/pi;
+
+	std::cout << "n/po = " << n/po << std::endl;
 
 	// check if pi, po | n
 	if(n%pi != 0) throw std::out_of_range("n is not divisible by pi");
