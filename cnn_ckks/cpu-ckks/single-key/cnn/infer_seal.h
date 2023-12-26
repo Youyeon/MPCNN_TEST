@@ -21,4 +21,5 @@ void import_parameters_cifar100(vector<double> &linear_weight, vector<double> &l
 // cifar10, cifar100 integrated
 void LeNet_mnist_seal_sparse(size_t layer_num, size_t start_image_id, size_t end_image_id);
 void ResNet_cifar10_seal_sparse(size_t layer_num, size_t start_image_id, size_t end_image_id);
+void ResNet_cifar10_seal_sparse_my(size_t layer_num, size_t start_image_id, size_t end_image_id);
 // void ResNet_cifar100_seal_sparse(size_t layer_num, size_t start_image_id, size_t end_image_id);

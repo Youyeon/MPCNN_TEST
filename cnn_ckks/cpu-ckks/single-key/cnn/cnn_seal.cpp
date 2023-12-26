@@ -98,6 +98,15 @@ void TensorCipher::print_parms()
 	cout << "t: " << t_ << endl;
 	cout << "p: " << p_ << endl;
 }
+void TensorCipher::print_parms_log(ofstream &output) const
+{
+	output << "k: " << k_ << endl;
+    output << "h: " << h_ << endl;
+    output << "w: " << w_ << endl;
+	output << "c: " << c_ << endl;
+	output << "t: " << t_ << endl;
+	output << "p: " << p_ << endl;
+}
 void siso_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, ofstream &output, Decryptor &decryptor, SEALContext &context, size_t stage, bool end)
 {
     cout << "siso convolution..." << endl;
@@ -106,6 +115,7 @@ void siso_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_o
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	siso_convolution_seal(cnn_in, cnn_out, co, st, fh, fw, data, encoder, encryptor, evaluator, gal_keys, cipher_pool, end);
 	time_end = chrono::high_resolution_clock::now();
@@ -113,6 +123,7 @@ void siso_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_o
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// cout << "convolution " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
 	// output << "convolution " << stage << " result" << endl;
     // decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
@@ -129,6 +140,7 @@ void repacked_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &c
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	repacked_convolution_seal(cnn_in, cnn_out, co, st, fh, fw, data, encoder, encryptor, evaluator, gal_keys, cipher_pool, end);
 	time_end = chrono::high_resolution_clock::now();
@@ -136,6 +148,7 @@ void repacked_convolution_seal_print(const TensorCipher &cnn_in, TensorCipher &c
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// cout << "convolution " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
 	// output << "convolution " << stage << " result" << endl;
     // decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
@@ -152,6 +165,7 @@ void multiplexed_parallel_convolution_print(const TensorCipher &cnn_in, TensorCi
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	// convolution_seal_sparse(cnn_in, cnn_out, hprime, st, kernel, false, data, running_var, constant_weight, epsilon, encoder, encryptor, scale_evaluator, gal_keys, cipher_pool, end);
 	multiplexed_parallel_convolution_seal(cnn_in, cnn_out, co, st, fh, fw, data, running_var, constant_weight, epsilon, encoder, encryptor, evaluator, gal_keys, cipher_pool, end);
@@ -160,6 +174,7 @@ void multiplexed_parallel_convolution_print(const TensorCipher &cnn_in, TensorCi
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// cout << "convolution " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
 	// output << "convolution " << stage << " result" << endl;
     // decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
@@ -177,6 +192,7 @@ void multiplexed_parallel_batch_norm_seal_print(const TensorCipher &cnn_in, Tens
 	chrono::microseconds time_diff;
 
 	// batch norm
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	multiplexed_parallel_batch_norm_seal(cnn_in, cnn_out, bias, running_mean, running_var, weight, epsilon, encoder, encryptor, evaluator, B, end); 
 	time_end = chrono::high_resolution_clock::now();
@@ -184,6 +200,7 @@ void multiplexed_parallel_batch_norm_seal_print(const TensorCipher &cnn_in, Tens
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	// cout << "batch normalization " << stage << " result" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
 	// output << "batch normalization " << stage << " result" << endl;
 	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
@@ -270,13 +287,15 @@ void multiplexed_parallel_downsampling_seal_print(const TensorCipher &cnn_in, Te
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	multiplexed_parallel_downsampling_seal(cnn_in, cnn_out, evaluator, gal_keys);
 	time_end = chrono::high_resolution_clock::now();
 	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	cnn_out.print_parms_log(output);
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -291,6 +310,7 @@ void averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &c
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	// averagepooling_seal_scale(cnn_in, cnn_out, scale_evaluator, gal_keys, B);
 	averagepooling_seal_scale(cnn_in, cnn_out, evaluator, gal_keys, B, encoder, decryptor, output);
@@ -298,7 +318,8 @@ void averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &c
 	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	cnn_out.print_parms_log(output);
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -308,12 +329,13 @@ void averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &c
 }
 void siso_averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, ofstream &output, Decryptor &decryptor, CKKSEncoder &encoder, SEALContext &context)
 {
-    cout << "average pooling..." << endl;
-    output << "average pooling..." << endl;
+    cout << "siso_average pooling..." << endl;
+    output << "siso_average pooling..." << endl;
 	int logn = cnn_in.logn();
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	// averagepooling_seal_scale(cnn_in, cnn_out, scale_evaluator, gal_keys, B);
 	siso_averagepooling_seal_scale(cnn_in, cnn_out, evaluator, gal_keys, B, encoder, decryptor, output);
@@ -321,6 +343,32 @@ void siso_averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCiph
 	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
+	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
+	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
+	output << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl;
+	output << "scale: " << cnn_out.cipher().scale() << endl << endl;
+
+}
+void repacked_averagepooling_seal_scale_print(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, ofstream &output, Decryptor &decryptor, CKKSEncoder &encoder, SEALContext &context)
+{
+    cout << "repacked_average pooling..." << endl;
+    output << "repacked_average pooling..." << endl;
+	int logn = cnn_in.logn();
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
+	cnn_in.print_parms_log(output);
+	time_start = chrono::high_resolution_clock::now();
+	// averagepooling_seal_scale(cnn_in, cnn_out, scale_evaluator, gal_keys, B);
+	repacked_averagepooling_seal_scale(cnn_in, cnn_out, evaluator, gal_keys, B, encoder, decryptor, output);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
+	cnn_out.print_parms_log(output);
 	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
@@ -337,13 +385,15 @@ void fully_connected_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_ou
 	chrono::high_resolution_clock::time_point time_start, time_end;
 	chrono::microseconds time_diff;
 
+	cnn_in.print_parms_log(output);
 	time_start = chrono::high_resolution_clock::now();
 	matrix_multiplication_seal(cnn_in, cnn_out, matrix, bias, q, r, evaluator, gal_keys);
 	time_end = chrono::high_resolution_clock::now();
 	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
 	cout << "time : " << time_diff.count() / 1000 << " ms" << endl;
 	output << "time : " << time_diff.count() / 1000 << " ms" << endl;
-	decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
+	cnn_out.print_parms_log(output);
+	// decrypt_and_print(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2); cnn_out.print_parms();
 	// decrypt_and_print_txt(cnn_out.cipher(), decryptor, encoder, 1<<logn, 256, 2, output); cnn_out.print_parms();
 	cout << "remaining level : " << context.get_context_data(cnn_out.cipher().parms_id())->chain_index() << endl; 
 	cout << "scale: " << cnn_out.cipher().scale() << endl << endl;
@@ -352,6 +402,8 @@ void fully_connected_seal_print(const TensorCipher &cnn_in, TensorCipher &cnn_ou
 }
 void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, bool end)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
 	// set parameters
     vector<double> conv_data;
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
@@ -391,20 +443,32 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 	// std::cout << "wo*ho = " << wo*ho << ", wo-1 = " << wo-1 << "\n";
 
 	// copy inputs
+	cout << "  [*] copy ci ... :";
+	time_start = chrono::high_resolution_clock::now();
 	Ciphertext in_copied = cnn_in.cipher();
+	vector<Ciphertext> rotated(co);
+	#pragma omp parallel for
 	for (int cc=1; cc<co; cc++) {
 		Ciphertext tmp = cnn_in.cipher();
 		memory_save_rotate(tmp, tmp, cc*ci*wi*hi, evaluator, gal_keys);
-		evaluator.add_inplace_reduced_error(in_copied, tmp); // filter i
+		rotated[cc] = tmp;
 	}
+	for (int cc=1; cc<co; cc++) {
+		evaluator.add_inplace_reduced_error(in_copied, rotated[cc]); // filter i
+	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 	
 	Ciphertext total_sum = ct_zero;
 	vector<Ciphertext> tmp_sum = vector<Ciphertext>(wo*ho, ct_zero);
 
 	// siso conv
+	cout << "  [*] siso conv ... :";
+	time_start = chrono::high_resolution_clock::now();
 	#pragma omp parallel for
 	for (int i=0; i<fw*fh; i++) {
-		Ciphertext tmp = cnn_in.cipher();
+		Ciphertext tmp = in_copied;
 		memory_save_rotate(tmp, tmp, indices[i], evaluator, gal_keys);
 		Ciphertext sum = tmp;
 		for (int j=1; j<ho; j++) {
@@ -422,32 +486,56 @@ void siso_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, in
 	for (int i=0; i<fw*fh; i++) {
 		evaluator.add_inplace_reduced_error(total_sum, tmp_sum[i]);
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// rotate and sum (ci[0] + ci[1] + ... + ci[ci-1] = co[i])
+	cout << "  [*] ras_ci ... :";
+	time_start = chrono::high_resolution_clock::now();
 	Ciphertext temp_ = total_sum;
+	vector<Ciphertext> temps_(ci);
+	#pragma omp parallel for
 	for (int i=1; i<ci; i++) {
 		Ciphertext tmp = total_sum;
 		memory_save_rotate(tmp, tmp, wo*ho*i, evaluator, gal_keys);
-		evaluator.add_inplace_reduced_error(temp_, tmp); // accumulate in channels per out
+		temps_[i] = tmp;
 	}
+	for (int i=1; i<ci; i++) {
+		evaluator.add_inplace_reduced_error(temp_, temps_[i]); // accumulate in channels per out
+	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// rotate and sum (accumulate output channels)
+	cout << "  [*] ras_co ... :";
+	time_start = chrono::high_resolution_clock::now();
 	Ciphertext accumulated = temp_;
+	vector<Ciphertext> temps(co);
+	#pragma omp parallel for
 	for (int i=1; i<co; i++) { // rotate to rearrange (remove gap)
 		Ciphertext tmp = temp_;
 		Ciphertext temp;
 		memory_save_rotate(tmp, tmp, -((wi*hi*ci)*i-wo*ho*i), evaluator, gal_keys);
 		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp); //mask
-		evaluator.add_inplace_reduced_error(accumulated, temp); // accumulate in channels per out
+		temps[i] = temp;
 	}
-
+	for (int i=1; i<co; i++) { 
+		evaluator.add_inplace_reduced_error(accumulated, temps[i]); // accumulate in channels per out
+	}
 	Ciphertext res = accumulated;
 	evaluator.rescale_to_next_inplace(res);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, res);
 }
 void repacked_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, bool end)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
 	// set parameters
     vector<double> conv_data;
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
@@ -467,11 +555,11 @@ void repacked_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out
 			indices[i*fw+j] = i*wi+j;
 		}
 	}
-	for (int i=0;i<fw*fh;i++) {
-		std::cout << indices[i] << " ";
-		if ((i+1)%fw==0)
-			std::cout << std::endl;
-	}
+	// for (int i=0;i<fw*fh;i++) {
+	// 	std::cout << indices[i] << " ";
+	// 	if ((i+1)%fw==0)
+	// 		std::cout << std::endl;
+	// }
 
 	// generate zero ciphertext 
 	vector<double> zero(1<<logn, 0.0);
@@ -484,20 +572,27 @@ void repacked_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out
 	vector<double> myweights(1<<logn, 0.1);
 	vector<double> mymasking(1<<logn, 1.0);
 
-	std::cout << "wo*ho = " << wo*ho << ", wo-1 = " << wo-1 << "\n";
+	// std::cout << "wo*ho = " << wo*ho << ", wo-1 = " << wo-1 << "\n";
 
 	// copy inputs
-	Ciphertext in_copied = cnn_in.cipher();
+	cout << "  [*] copy ci ... :";
+	time_start = chrono::high_resolution_clock::now();
+	// Ciphertext in_copied = cnn_in.cipher();
 	// for (int cc=1; cc<co; cc++) {
 	// 	Ciphertext tmp = cnn_in.cipher();
 	// 	memory_save_rotate(tmp, tmp, cc*ci*wi*hi, evaluator, gal_keys);
 	// 	evaluator.add_inplace_reduced_error(in_copied, tmp); // filter i
 	// }
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 	
 	Ciphertext total_sum = ct_zero;
 	vector<Ciphertext> tmp_sum = vector<Ciphertext>(wo*ho, ct_zero);
 
 	// siso conv
+	cout << "  [*] siso conv ... :";
+	time_start = chrono::high_resolution_clock::now();
 	#pragma omp parallel for
 	for (int i=0; i<fw*fh; i++) {
 		Ciphertext tmp = cnn_in.cipher();
@@ -511,32 +606,61 @@ void repacked_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out
 	for (int i=0; i<fw*fh; i++) {
 		evaluator.add_inplace_reduced_error(total_sum, tmp_sum[i]);
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// rotate and sum (ci[0] + ci[1] + ... + ci[ci-1] = co[i])
+	cout << "  [*] ras_ci ... :";
+	time_start = chrono::high_resolution_clock::now();
 	Ciphertext temp_ = total_sum;
+	vector<Ciphertext> temps_(ci);
+	#pragma omp parallel for
 	for (int i=1; i<ci; i++) {
 		Ciphertext tmp = total_sum;
 		memory_save_rotate(tmp, tmp, wo*ho*i, evaluator, gal_keys);
-		evaluator.add_inplace_reduced_error(temp_, tmp); // accumulate in channels per out
+		temps_[i] = tmp;
 	}
+	for (int i=1; i<ci; i++) {
+		evaluator.add_inplace_reduced_error(temp_, temps_[i]); // accumulate in channels per out
+	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// rotate and sum (accumulate output channels)
 	Ciphertext accumulated = temp_;
+	cout << "  [*] ras_co ... :";
+	time_start = chrono::high_resolution_clock::now();
+	vector<Ciphertext> temps(co);
+	#pragma omp parallel for
 	for (int i=1; i<co; i++) { // rotate to rearrange (remove gap)
 		Ciphertext tmp = temp_;
 		Ciphertext temp;
 		memory_save_rotate(tmp, tmp, -((wi*hi*ci)*i-wo*ho*i), evaluator, gal_keys);
 		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp); //mask
-		evaluator.add_inplace_reduced_error(accumulated, temp); // accumulate in channels per out
+		temps[i] = temp;
+		// evaluator.add_inplace_reduced_error(accumulated, temp); // accumulate in channels per out
 	}
+	for (int i=1; i<co; i++) { 
+		evaluator.add_inplace_reduced_error(accumulated, temps[i]); // accumulate in channels per out
+	}
+	evaluator.rescale_to_next_inplace(accumulated);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	Ciphertext res = accumulated;
-	evaluator.rescale_to_next_inplace(res);
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, res);
 }
 void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, int co, int st, int fh, int fw, const vector<double> &data, vector<double> running_var, vector<double> constant_weight, double epsilon, CKKSEncoder &encoder, Encryptor &encryptor, Evaluator &evaluator, GaloisKeys &gal_keys, vector<Ciphertext> &cipher_pool, bool end)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
+	cout << "  [*] pre-computation ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// set parameters
     vector<double> conv_data;
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
@@ -652,12 +776,18 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 		}
 	}
 
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
+
 	// ciphertext variables
 	Ciphertext *ctxt_in=&cipher_pool[0], *ct_zero=&cipher_pool[1], *temp=&cipher_pool[2], *sum=&cipher_pool[3], *total_sum=&cipher_pool[4], *var=&cipher_pool[5];
 
 	// ciphertext input
 	*ctxt_in = cnn_in.cipher();
 
+	cout << "  [*] rotated input precomputation ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// rotated input precomputation
 	vector<vector<Ciphertext*>> ctxt_rot(fh, vector<Ciphertext*>(fw));
 	// if(fh != 3 || fw != 3) throw std::invalid_argument("fh and fw should be 3");
@@ -682,6 +812,9 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 			memory_save_rotate(*ctxt_rot[i1][i2], *ctxt_rot[i1][i2], ki*ki*wi*(i1-(fh-1)/2) + ki*(i2-(fw-1)/2), evaluator, gal_keys);
 		}
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// generate zero ciphertext 
 	vector<double> zero(1<<logn, 0.0);
@@ -691,6 +824,8 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 
 	for(int i9=0; i9<q; i9++)
 	{
+		cout << "  [*] weight multiplication ... :";
+		time_start = chrono::high_resolution_clock::now();
 		// weight multiplication
 		// cout << "multiplication by filter coefficients" << endl;
 		for(int i1=0; i1<fh; i1++)
@@ -707,21 +842,24 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 		}
 		evaluator.rescale_to_next_inplace(*sum);
 		*var = *sum;
+		time_end = chrono::high_resolution_clock::now();
+		time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+		cout << time_diff.count() / 1000 << " ms" << endl;
 
+		cout << "  [*] summation for all input channels ... :";
+		time_start = chrono::high_resolution_clock::now();
 		// summation for all input channels
 		// cout << "summation for all input channels" << endl;
 		int d = log2_long(ki), c = log2_long(ti);
 		for(int x=0; x<d; x++)
 		{
 			*temp = *var;
-		//	scale_evaluator.rotate_vector(temp, pow2(x), gal_keys, temp);
 			memory_save_rotate(*temp, *temp, pow2(x), evaluator, gal_keys);
 			evaluator.add_inplace_reduced_error(*var, *temp);
 		}
 		for(int x=0; x<d; x++)
 		{
 			*temp = *var;
-		//	scale_evaluator.rotate_vector(temp, pow2(x)*k*l, gal_keys, temp);
 			memory_save_rotate(*temp, *temp, pow2(x)*ki*wi, evaluator, gal_keys);
 			evaluator.add_inplace_reduced_error(*var, *temp);
 		}
@@ -747,7 +885,12 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 				evaluator.add_inplace_reduced_error(*var, *temp);
 			}
 		}
+		time_end = chrono::high_resolution_clock::now();
+		time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+		cout << time_diff.count() / 1000 << " ms" << endl;
 
+		cout << "  [*] collecting valid values into one ciphertext ... :";
+		time_start = chrono::high_resolution_clock::now();
 		// collecting valid values into one ciphertext.
 		// cout << "collecting valid values into one ciphertext." << endl;
 		for(int i8=0; i8<pi && pi*i9+i8<co; i8++)
@@ -761,10 +904,15 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 			if(i8==0 && i9==0) *total_sum = *temp;	// total_sum: double scaling factor
 			else evaluator.add_inplace_reduced_error(*total_sum, *temp);
 		}
+		time_end = chrono::high_resolution_clock::now();
+		time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+		cout << time_diff.count() / 1000 << " ms" << endl;
 	}
 	evaluator.rescale_to_next_inplace(*total_sum);
 	*var = *total_sum;
 
+	cout << "  [*] po copies ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// po copies
 	if(end == false)
 	{
@@ -778,6 +926,9 @@ void multiplexed_parallel_convolution_seal(const TensorCipher &cnn_in, TensorCip
 		}
 		*var = *sum;
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, *var);
 
@@ -863,6 +1014,9 @@ void cnn_add_seal(const TensorCipher &cnn1, const TensorCipher &cnn2, TensorCiph
 }
 void multiplexed_parallel_downsampling_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
 	// parameter setting
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
 	int ko = 0, ho = 0, wo = 0, co = 0, to = 0, po = 0;
@@ -887,6 +1041,8 @@ void multiplexed_parallel_downsampling_seal(const TensorCipher &cnn_in, TensorCi
 	Ciphertext ct, sum, temp;
 	ct = cnn_in.cipher();
 
+	cout << "  [*] pre-computation ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// selecting tensor vector setting
 	for(int w1=0; w1<ki; w1++)
 	{
@@ -900,7 +1056,12 @@ void multiplexed_parallel_downsampling_seal(const TensorCipher &cnn_in, TensorCi
 			}
 		}
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
+	cout << "  [*] down-sampling ... :";
+	time_start = chrono::high_resolution_clock::now();
 	for(int w1=0; w1<ki; w1++)
 	{
 		for(int w2=0; w2<ti; w2++)
@@ -917,7 +1078,12 @@ void multiplexed_parallel_downsampling_seal(const TensorCipher &cnn_in, TensorCi
 	}
 	evaluator.rescale_to_next_inplace(sum);		// added
 	ct = sum;
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
+	cout << "  [*] fprime packing(po-1) ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// for fprime packing
 	sum = ct;
 	for(int u6=1; u6<po; u6++)
@@ -927,12 +1093,18 @@ void multiplexed_parallel_downsampling_seal(const TensorCipher &cnn_in, TensorCi
 		evaluator.add_inplace_reduced_error(sum, temp);
 	}
 	ct = sum;
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, ct);
 
 }
 void averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, CKKSEncoder &encoder, Decryptor &decryptor, ofstream &output)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
 	// parameter setting
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
 	int ko = 1, ho = 1, wo = 1, co = ci, to = ti;
@@ -943,28 +1115,33 @@ void averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out
 	Ciphertext ct, temp, sum;
 	ct = cnn_in.cipher();
 
+	cout << "  [*] sum hiwi ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// sum_hiwi
 	// cout << "sum hiwi" << endl;
 
 	for(int x=0; x<log2_long(wi); x++)
 	{
 		temp = ct;
-	//	scale_evaluator.rotate_vector_inplace(temp, pow2(x)*k, gal_keys);
 		memory_save_rotate(temp, temp, pow2(x)*ki, evaluator, gal_keys);
 		evaluator.add_inplace_reduced_error(ct, temp);
 	}
 	for(int x=0; x<log2_long(hi); x++)
 	{
 		temp = ct;
-	//	scale_evaluator.rotate_vector_inplace(temp, pow2(x)*k*k*l, gal_keys);
 		memory_save_rotate(temp, temp, pow2(x)*ki*ki*wi, evaluator, gal_keys);
 		evaluator.add_inplace_reduced_error(ct, temp);
 	}
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	// cout << "sum l^2 results" << endl;
 	// output << "sum l^2 results" << endl;
 	// decrypt_and_print_txt(ct, decryptor, encoder, 1<<logn, 256, 2, output);
 
+	cout << "  [*] rotate and sum ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// final
 	// cout << "final" << endl;
 	vector<double> select_one(1<<logn, 0.0), zero(1<<logn, 0.0);
@@ -974,10 +1151,8 @@ void averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out
 		{
 			int p=ki*u+s;
 			temp = ct;
-		//	scale_evaluator.rotate_vector_inplace(temp, -p*k + k*k*l*l*u + k*l*s, gal_keys);
 			memory_save_rotate(temp, temp, -p*ki + ki*ki*hi*wi*u + ki*wi*s, evaluator, gal_keys);
 			select_one = zero;
-			// for(int i=0; i<k; i++) select_one[(k*u+s)*k+i] = 1.0 / static_cast<double>(l*l);
 			for(int i=0; i<ki; i++) select_one[(ki*u+s)*ki+i] = B / static_cast<double>(hi*wi);
 
 			evaluator.multiply_vector_inplace_reduced_error(temp, select_one);
@@ -985,21 +1160,19 @@ void averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out
 			else evaluator.add_inplace_reduced_error(sum, temp);
 		}
 
-		// cout << "final iteration results" << endl;
-		// output << "final iteration results" << endl;
-		// decrypt_and_print_txt(sum, decryptor, encoder, 1<<logn, 256, 2, output);
 	}
 	evaluator.rescale_to_next_inplace(sum);
-
-	// cout << "rescaling results" << endl;
-	// output << "rescaling results" << endl;
-	// decrypt_and_print_txt(sum, decryptor, encoder, 1<<logn, 256, 2, output);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, 1, sum);
 	
 }
 void siso_averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, CKKSEncoder &encoder, Decryptor &decryptor, ofstream &output)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
 	// st=2, fh=fw=2
 	// set parameters
     vector<double> conv_data;
@@ -1016,33 +1189,83 @@ void siso_averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cn
 	vector<double> mymasking(1<<logn, 1.0);
 
 	// pool
-	Ciphertext tmp = cnn_in.cipher();
-	Ciphertext tmp2;
-	memory_save_rotate(tmp, tmp2, -wi, evaluator, gal_keys);
-	evaluator.add_inplace_reduced_error(tmp, tmp2);
-	memory_save_rotate(tmp2, tmp2, -1, evaluator, gal_keys);
-	evaluator.add_inplace_reduced_error(tmp, tmp2); // 0, ##, 1, ##, 2, ##, ..
+	cout << "  [*] pooling ... :";
+	time_start = chrono::high_resolution_clock::now();
+		Ciphertext tmp = cnn_in.cipher();
+		Ciphertext tmp2;
+		memory_save_rotate(tmp, tmp2, -wi, evaluator, gal_keys);
+		evaluator.add_inplace_reduced_error(tmp, tmp2);
+		memory_save_rotate(tmp2, tmp2, -1, evaluator, gal_keys);
+		evaluator.add_inplace_reduced_error(tmp, tmp2); // 0, ##, 1, ##, 2, ##, ..
+		evaluator.multiply_vector_reduced_error(tmp, mymasking, tmp); // avg & mask
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	Ciphertext accumulated = tmp;
 	vector<Ciphertext> tmp_(wo*ho);
 
+	// ras
+	cout << "  [*] ras ... :";
+	time_start = chrono::high_resolution_clock::now();
 	#pragma omp parallel for
 	for (int i=1; i<wo*ho; i++) {
 		Ciphertext temp = tmp;
-		Ciphertext temp_;
 		memory_save_rotate(temp, temp, -i, evaluator, gal_keys); // TODO: slot
-		evaluator.multiply_vector_reduced_error(tmp, mymasking, temp_); // avg & mask
-		tmp_[i] = temp_;
+		tmp_[i] = temp;
 	}
 	for (int i=1; i<wo*ho; i++) {
 		evaluator.add_inplace_reduced_error(accumulated, tmp_[i]); // 0, 1, 2, 3, ..
 	}
 	evaluator.rescale_to_next_inplace(accumulated);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
+
+	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, accumulated);
+}
+void repacked_averagepooling_seal_scale(const TensorCipher &cnn_in, TensorCipher &cnn_out, Evaluator &evaluator, GaloisKeys &gal_keys, double B, CKKSEncoder &encoder, Decryptor &decryptor, ofstream &output)
+{
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+	// st=2, fh=fw=2
+	// set parameters
+    vector<double> conv_data;
+	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
+	int ko = 0, ho = 0, wo = 0, to = 0, po = 0;
+	int st = 2, fh = 2, fw = 2, co = ci;
+
+	// set ho, wo, ko
+	ho = hi/2;
+	wo = wi/2;
+	ko = ki*st;
+
+	// masking
+	vector<double> mymasking(1<<logn, 1.0);
+
+	Ciphertext tmp = cnn_in.cipher(); // repacked
+	vector<Ciphertext> tmp2(4, tmp); // repacked
+	Ciphertext accumulated = tmp;
+
+	// pool
+	cout << "  [*] pooling ... :";
+	time_start = chrono::high_resolution_clock::now();
+	for (int i=1; i<fh*fw; i++) {
+		evaluator.add_inplace_reduced_error(accumulated, tmp2[i]); // 0, 1, 2, 3, ..
+	}
+	evaluator.multiply_vector_reduced_error(accumulated, mymasking, accumulated); // avg
+	evaluator.rescale_to_next_inplace(accumulated);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, accumulated);
 }
 void matrix_multiplication_seal(const TensorCipher &cnn_in, TensorCipher &cnn_out, vector<double> matrix, vector<double> bias, int q, int r, Evaluator &evaluator, GaloisKeys &gal_keys)
 {
+	chrono::high_resolution_clock::time_point time_start, time_end;
+	chrono::microseconds time_diff;
+
 	// parameter setting
 	int ki = cnn_in.k(), hi = cnn_in.h(), wi = cnn_in.w(), ci = cnn_in.c(), ti = cnn_in.t(), pi = cnn_in.p(), logn = cnn_in.logn();
 	int ko = ki, ho = hi, wo = wi, co = ci, to = ti, po = pi;
@@ -1065,19 +1288,31 @@ void matrix_multiplication_seal(const TensorCipher &cnn_in, TensorCipher &cnn_ou
 		}
 	}
 
+	cout << "  [*] matmul ... :";
+	time_start = chrono::high_resolution_clock::now();
 	// matrix multiplication
-	Ciphertext ct, temp, sum;
+	Ciphertext ct, sum;
 	ct = cnn_in.cipher();
+	vector<Ciphertext> tmp_sum(q+r-1);
+	// #pragma omp parallel for
 	for(int s=0; s<q+r-1; s++)
 	{
-		temp = ct;
-	//	scale_evaluator.rotate_vector_inplace(temp, r-1-s, gal_keys);
+		Ciphertext temp = ct;
 		memory_save_rotate(temp, temp, r-1-s, evaluator, gal_keys);
 		evaluator.multiply_vector_inplace_reduced_error(temp, W[s]);
 		if(s==0) sum = temp;
 		else evaluator.add_inplace_reduced_error(sum, temp);
+		// tmp_sum[s] = temp;
 	}
+	// sum = tmp_sum[0];
+	// for(int s=1; s<q+r-1; s++)
+	// {
+	// 	evaluator.add_inplace_reduced_error(sum, tmp_sum[s]);
+	// }
 	evaluator.rescale_to_next_inplace(sum);
+	time_end = chrono::high_resolution_clock::now();
+	time_diff = chrono::duration_cast<chrono::milliseconds>(time_end - time_start);
+	cout << time_diff.count() / 1000 << " ms" << endl;
 
 	cnn_out = TensorCipher(logn, ko, ho, wo, co, to, po, sum);
 
